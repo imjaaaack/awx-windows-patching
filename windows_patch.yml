@@ -3,11 +3,12 @@
   hosts: all
   gather_facts: yes
   vars:
-    ansible_user: admin
-    ansible_password: admin123
+    ansible_user: Administrator
+    ansible_password: P@ssw0rd123
     ansible_connection: winrm
     ansible_winrm_transport: basic
     ansible_winrm_server_cert_validation: ignore
+    ansible_port: 5985
 
   tasks:
     - name: Install all security updates
