@@ -19,3 +19,7 @@
           - UpdateRollups
         reboot: yes
 
+- name: Force reboot after updates
+  win_reboot:
+    reboot_timeout: 3600
+
