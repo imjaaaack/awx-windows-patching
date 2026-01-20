@@ -1,5 +1,5 @@
 ---
-- name: Patch Windows Servers with Security Updates
+- name: Patch Windows Servers (ignore non-critical errors)
   hosts: all
   gather_facts: yes
   vars:
@@ -11,15 +11,21 @@
     ansible_port: 5985
 
   tasks:
-    - name: Install all security updates
+    - name: Install security and critical updates
       win_updates:
         category_names:
           - SecurityUpdates
           - CriticalUpdates
           - UpdateRollups
-        reboot: yes
+        reboot: no
+      register: win_update_result
+      # Only fail if the module actually reports a failure
+      failed_when: win_update_result.failed and "'No updates' not in win_update_result.msg"
 
-- name: Force reboot after updates
-  win_reboot:
-    reboot_timeout: 3600
+    - name: Reboot if updates require it
+      win_reboot:
+        reboot_timeout: 3600
+      when: win_update_result.reboot_required
+
+
 
